@@ -1,0 +1,10 @@
+
+
+OPTION psf_version = 2.1;
+
+BEGIN DRIVER toggle_leds
+	OPTION supported_peripherals = (toggle_leds);
+	OPTION copyfiles = all;
+	OPTION VERSION = 1.0;
+	OPTION NAME = toggle_leds;
+END DRIVER
