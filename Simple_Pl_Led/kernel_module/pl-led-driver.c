@@ -64,6 +64,10 @@ static long led_control_ioctl(struct file *filep, unsigned int cmd, unsigned lon
 return 0;
 }
 
+static const struct file_operations driver_fops = {
+        .owner = THIS_MODULE,
+        .unlocked_ioctl = led_control_ioctl,
+};
 
 static irqreturn_t pl_led_driver_irq(int irq, void *lp)
 {
