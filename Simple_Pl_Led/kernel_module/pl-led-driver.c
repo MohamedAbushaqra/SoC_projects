@@ -15,6 +15,7 @@
 
 #include <linux/of_address.h>
 #include <linux/of_device.h>
+#include <linux/cdev.h>
 #include <linux/of_platform.h>
 
 
@@ -25,6 +26,8 @@ MODULE_DESCRIPTION
     ("pl-led-driver, simple loadable module generated bz petalinux and modified by me to control PL leds");
 
 #define DRIVER_NAME "pl-led-driver"
+#define DEV_CNT  1
+
 
 #define		Reg0_LED_1		0x00
 #define		Reg0_LED_2		0x01
@@ -43,6 +46,13 @@ struct pl_led_driver_local {
 	unsigned long mem_start;
 	unsigned long mem_end;
 	void __iomem *base_addr;
+
+	dev_t devid;
+    struct cdev cdev;
+    struct class *class;
+    struct device *device;
+    int major;
+    void *private_data;
 };
 
 
@@ -54,20 +64,22 @@ static long led_control_ioctl(struct file *filep, unsigned int cmd, unsigned lon
 	switch (cmd)
     {
 		case IOCTL_LEDS_ON:
-			iowrite32( 0xf, lp->base_addr );
+			iowrite32( 0x1, lp->base_addr + Reg0_LED_1 );
 		break;
 
 		case IOCTL_LEDS_OFF:
-			iowrite32( 0x0, lp->base_addr );
+			iowrite32( 0x0, lp->base_addr + Reg0_LED_1 );
 		break;
 	}
 return 0;
 }
 
+
 static const struct file_operations driver_fops = {
         .owner = THIS_MODULE,
         .unlocked_ioctl = led_control_ioctl,
 };
+
 
 static irqreturn_t pl_led_driver_irq(int irq, void *lp)
 {
@@ -137,6 +149,24 @@ static int pl_led_driver_probe(struct platform_device *pdev)
 		(unsigned int __force)lp->base_addr,
 		lp->irq);
 	return 0;
+
+	alloc_chrdev_region(&lp->devid, 0, DEV_CNT, DRIVER_NAME);
+    cdev_init(&lp->cdev, &driver_fops);
+    cdev_add(&lp->cdev, lp->devid, DEV_CNT);
+
+    lp->class = class_create(THIS_MODULE, DRIVER_NAME);
+    if(IS_ERR(lp->class))
+    {
+        return PTR_ERR(lp->class);
+    }
+
+    lp->device = device_create(lp->class, NULL, lp->devid, NULL, DRIVER_NAME);
+    if(IS_ERR(lp->device))
+    {
+        return PTR_ERR(lp->device);
+    }
+
+
 error3:
 	free_irq(lp->irq, lp);
 error2:
@@ -160,7 +190,7 @@ static int pl_led_driver_remove(struct platform_device *pdev)
 }
 
 static struct of_device_id pl_led_driver_of_match[] = {
-	{ .compatible = "xlnx,toggle-leds-1.0", },
+	{ .compatible = "leds-toggler", },
 	{ /* end of list */ },
 }; MODULE_DEVICE_TABLE(of, pl_led_driver_of_match);
 
