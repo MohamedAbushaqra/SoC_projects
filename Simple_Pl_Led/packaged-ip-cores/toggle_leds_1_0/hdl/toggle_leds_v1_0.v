@@ -15,7 +15,7 @@
 	)
 	(
 		// Users to add ports here
-        output wire [3:0] LEDS,
+        output wire [3:0] leds,
 		// User ports ends
 		// Do not modify the ports beyond this line
 
@@ -48,7 +48,7 @@
 		.C_S_AXI_DATA_WIDTH(C_S00_AXI_DATA_WIDTH),
 		.C_S_AXI_ADDR_WIDTH(C_S00_AXI_ADDR_WIDTH)
 	) toggle_leds_v1_0_S00_AXI_inst (
-	    .LEDS(leds),
+	    .leds(leds),
 		.S_AXI_ACLK(s00_axi_aclk),
 		.S_AXI_ARESETN(s00_axi_aresetn),
 		.S_AXI_AWADDR(s00_axi_awaddr),

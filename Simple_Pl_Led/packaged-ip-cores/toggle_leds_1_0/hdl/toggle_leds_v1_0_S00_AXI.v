@@ -15,7 +15,7 @@
 	)
 	(
 		// Users to add ports here
-        output wire [3:0] LEDS,
+        output wire [3:0] leds,
 		// User ports ends
 		// Do not modify the ports beyond this line
 
@@ -398,7 +398,7 @@
 	end    
 
 	// Add user logic here
-    assign LEDS = slv_reg0[3:0];
+    assign leds = slv_reg0[3:0];
 	// User logic ends
 
 	endmodule
