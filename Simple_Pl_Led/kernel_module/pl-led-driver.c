@@ -42,7 +42,7 @@ static long leds_control_ioctl(struct file *filep, unsigned int cmd, unsigned lo
 	switch (cmd)
     {
 		case IOCTL_LEDS_ON:
-			iowrite32( 0x0, lp->base_addr );
+			iowrite32( 0x0, lp->base_addr ); // zeros because leds are connected as active low
 		break;
 
 		case IOCTL_LEDS_OFF:
