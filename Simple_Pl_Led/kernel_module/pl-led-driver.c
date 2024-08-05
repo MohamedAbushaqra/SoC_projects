@@ -16,14 +16,12 @@
 #define IOCTL_DEVICE_DRIVER		'r'
 #define IOCTL_LEDS_ON			_IOWR (IOCTL_DEVICE_DRIVER, 0, int)
 #define IOCTL_LEDS_OFF			_IOWR (IOCTL_DEVICE_DRIVER, 1, int)
-// ----------------------------------------------------------------------- //
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Mohamed Abushaqra");
 MODULE_DESCRIPTION("simple loadable module to test pl led axi lite ip core");
 
 struct pl_leds_local {
-	int irq;
 	unsigned long mem_start;
 	unsigned long mem_end;
 	void __iomem *base_addr;
@@ -34,6 +32,16 @@ struct pl_leds_local {
 	struct class *class;
 	void *private_data;
 };
+
+
+static int led_control_open(struct inode *inode, struct file *file)  {
+
+	struct pl_leds_local *lp;
+	lp = container_of(inode->i_cdev, struct pl_leds_local, cdev);
+	file->private_data = lp;
+
+	return 0;
+}
 
 
 static long leds_control_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
@@ -57,6 +65,7 @@ static long leds_control_ioctl(struct file *filep, unsigned int cmd, unsigned lo
 
 static const struct file_operations driver_fops = {
 	.owner = THIS_MODULE,
+	.open  = led_control_open,
 	.unlocked_ioctl = leds_control_ioctl,
 };
 
@@ -132,12 +141,12 @@ static int pl_leds_probe(struct platform_device *pdev)
 	return 0;
 
 
-error2:
-	release_mem_region(lp->mem_start, lp->mem_end - lp->mem_start + 1);
-error1:
-	kfree(lp);
-	dev_set_drvdata(dev, NULL);
-	return rc;
+	error2:
+		release_mem_region(lp->mem_start, lp->mem_end - lp->mem_start + 1);
+	error1:
+		kfree(lp);
+		dev_set_drvdata(dev, NULL);
+		return rc;
 }
 
 static int pl_leds_remove(struct platform_device *pdev)
