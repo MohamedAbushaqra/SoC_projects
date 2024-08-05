@@ -16,12 +16,14 @@
 #define IOCTL_DEVICE_DRIVER		'r'
 #define IOCTL_LEDS_ON			_IOWR (IOCTL_DEVICE_DRIVER, 0, int)
 #define IOCTL_LEDS_OFF			_IOWR (IOCTL_DEVICE_DRIVER, 1, int)
+// ----------------------------------------------------------------------- //
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Mohamed Abushaqra");
-MODULE_DESCRIPTION("pl-led-driver, simple loadable module generated bz petalinux and modified by me to control PL leds");
+MODULE_DESCRIPTION("simple loadable module to test pl led axi lite ip core");
 
 struct pl_leds_local {
+	int irq;
 	unsigned long mem_start;
 	unsigned long mem_end;
 	void __iomem *base_addr;
@@ -42,7 +44,7 @@ static long leds_control_ioctl(struct file *filep, unsigned int cmd, unsigned lo
 	switch (cmd)
     {
 		case IOCTL_LEDS_ON:
-			iowrite32( 0x0, lp->base_addr ); // zeros because leds are connected as active low
+			iowrite32( 0x0, lp->base_addr );
 		break;
 
 		case IOCTL_LEDS_OFF:
