@@ -1,3 +1,7 @@
+/* Abushaqra - Jun - 15 - 2024 - created */
+/* This Kernel Level driver enables the control of the simple led toggler ip core in Vivado */
+/* Any kind of distribution of this Kernel Level Driver without the Permission of the Author is FORBIDDEN */
+
 #include <linux/kernel.h>
 #include <linux/init.h>
 #include <linux/module.h>
