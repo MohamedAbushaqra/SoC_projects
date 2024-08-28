@@ -19,9 +19,6 @@
 int main ( void ) {
 	
 	unsigned char simple_ipcore_dev_node[56] = "/dev/PL_LED";
-
-	unsigned int i = 0; 
-	unsigned int timer = 0;
     
 	int simple_ipcore_handle = open (simple_ipcore_dev_node , O_RDWR);
 	
