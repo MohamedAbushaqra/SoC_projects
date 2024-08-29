@@ -72,12 +72,16 @@ static long pwm_fan_control_ioctl(struct file *filep, unsigned int cmd, unsigned
 		break;
 
 		case IOCTL_PWM_SPEED_CUSTOM:
-			if ((arg > 255) || (arg < 0 ))
+			if ((arg > 100) || (arg < 0 ))
 			{
-				printk("Unable to set the given value, please choose between 0 and 255!\n");
+				printk("Unable to set the given value, please choose between 0 and 100 percent!\n");
 			}
 			else
-				iowrite32( arg, lp->base_addr );
+			{
+				tempVal = (arg/100)*255;
+				printk("Setting the fan speed to %d\n", arg);
+				iowrite32( tempVal, lp->base_addr );
+			}
 		break;
 	}
 	return 0;
