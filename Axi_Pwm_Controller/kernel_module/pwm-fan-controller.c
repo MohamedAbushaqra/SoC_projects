@@ -51,7 +51,6 @@ static int pwm_fan_control_open(struct inode *inode, struct file *file)  {
 static long pwm_fan_control_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
 {
 	struct pwm_fan_controller_local *lp = filep->private_data;
-	unsigned int tempVal;
 
 	switch (cmd)
     {
@@ -72,16 +71,7 @@ static long pwm_fan_control_ioctl(struct file *filep, unsigned int cmd, unsigned
 		break;
 
 		case IOCTL_PWM_SPEED_CUSTOM:
-			if ((arg > 100) || (arg < 0 ))
-			{
-				printk("Unable to set the given value, please choose between 0 and 100 percent!\n");
-			}
-			else
-			{
-				tempVal = (arg/100)*255;
-				printk("Setting the fan speed to %d\n", arg);
-				iowrite32( tempVal, lp->base_addr );
-			}
+			iowrite32(arg, lp->base_addr);
 		break;
 	}
 	return 0;
