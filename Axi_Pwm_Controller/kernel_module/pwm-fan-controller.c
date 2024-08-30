@@ -51,6 +51,7 @@ static int pwm_fan_control_open(struct inode *inode, struct file *file)  {
 static long pwm_fan_control_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
 {
 	struct pwm_fan_controller_local *lp = filep->private_data;
+	unsigned int tempVal;
 
 	switch (cmd)
     {
@@ -71,7 +72,15 @@ static long pwm_fan_control_ioctl(struct file *filep, unsigned int cmd, unsigned
 		break;
 
 		case IOCTL_PWM_SPEED_CUSTOM:
-			iowrite32(arg, lp->base_addr);
+			if ((arg > 255) || (arg < 0 ))
+			{
+				printk("Unable to set the given value, please choose between 0 and 255.\n");
+			}
+			else
+			{
+				printk("Setting the duty cycle register to %d\n", arg);
+				iowrite32(arg, lp->base_addr);
+			}
 		break;
 	}
 	return 0;
