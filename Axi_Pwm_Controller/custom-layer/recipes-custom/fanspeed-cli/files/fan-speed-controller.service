@@ -1,0 +1,17 @@
+[Unit]
+Description=service that will start and stop the fan when booting and powering off system
+DefaultDependencies=no
+Before=shutdown.target reboot.target halt.target
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/fanspeed-cli -c MIDDLE
+ExecStop=/usr/bin/fanspeed-cli -c OFF
+RemainAfterExit=yes
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=shutdown.target
+
