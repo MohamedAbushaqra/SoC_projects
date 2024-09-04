@@ -60,7 +60,7 @@ static long pwm_fan_control_ioctl(struct file *filep, unsigned int cmd, unsigned
 	switch (cmd)
     {
 		case IOCTL_PWM_SPEED_FULLSPEED:
-			iowrite32( 0xff, lp->base_addr ); // Active low configuration
+			iowrite32( 0xff, lp->base_addr );
 		break;
 
 		case IOCTL_PWM_SPEED_MIDDLE:
