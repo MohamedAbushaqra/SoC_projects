@@ -1,0 +1,12 @@
+[Unit]
+Description=Setup-wlan0
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/wpa_supplicant -Dnl80211 -iwlan0 -c/etc/wpa_supplicant.conf -B
+ExecStart=/sbin/udhcpc -i wlan0
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

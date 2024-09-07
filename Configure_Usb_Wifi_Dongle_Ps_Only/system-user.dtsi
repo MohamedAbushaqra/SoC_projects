@@ -1,0 +1,20 @@
+/include/ "system-conf.dtsi"
+/ {
+
+
+        pmu {
+                /delete-property/ interrupt-affinity;
+                interrupt-affinity = <&cpu0>, <&cpu1>;
+        };
+
+	aliases {
+		wlan0 = &usb0;
+	};
+};
+
+
+/* SD */
+&sdhci1 {
+   no-1-8-v;
+   disable-wp;
+};
