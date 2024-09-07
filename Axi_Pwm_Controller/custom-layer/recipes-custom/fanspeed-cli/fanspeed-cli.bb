@@ -1,11 +1,14 @@
 SUMMARY = "bitbake file to manage the cli application and the corresponding systemd service"
 DESCRIPTION = "compiles the cpp cli application and deploy the corresponding systemd"
 LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e"
 
 SRC_URI = "file://pwm-fan-controller-userapp.cpp \
 	   file://pwm-fan-controller.h \
-           file://fan-speed-controller.service"
+           file://fan-speed-controller.service" \
+	   file://COPYING"
 
+S = "${WORKDIR}"
 
 inherit systemd
 	
