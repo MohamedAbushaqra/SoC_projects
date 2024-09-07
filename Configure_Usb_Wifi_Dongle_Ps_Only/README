@@ -1,0 +1,17 @@
+Brief explination on how to use this recipe:
+
+This recipe can enable wifi dognles through usb ports. USB port is directly on the PS side of the SoC.
+
+bsp.cfg: this is a config file for the kernel configs that we need to enable in order to configure the wifi usb dongle (drivers, etc), i enabled some extra kernel configs
+since i want to use wireguard for tunneling.
+Found under: PathToPetaLinuxProject/project-spec/meta-user/recipes-kernel/linux/linux-xlnx/bsp.cfg
+
+rootfs_config: i added the rootfs packages list, this defines which packages will be compiled and packaed, we need some networking tools as well as wpa supplicant, 
+in order to setup the usb wifi dongle.
+Found under: PathToPetaLinuxProject/project-spec/configs/rootfs_config
+
+system-user.dtsi: this is a device tree include file, the modification needed here is to tell the system that the wlan0 interface will be handeld by the usb0,
+therefore we will create an alias that is wlan0 that is refrenced to the usb0.
+Found under: PathToPetaLinuxProject/project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
+
+The wifi-autoconnect-ps is just a recipe that can be added to the project, check the Axi_Pwm_Controller in order to know more on how to use it.
