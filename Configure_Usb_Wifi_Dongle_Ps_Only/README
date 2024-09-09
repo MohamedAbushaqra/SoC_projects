@@ -15,3 +15,23 @@ therefore we will create an alias that is wlan0 that is refrenced to the usb0.
 Found under: PathToPetaLinuxProject/project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
 
 The wifi-autoconnect-ps is just a recipe that can be added to the project, check the Axi_Pwm_Controller in order to know more on how to use it.
+
+Now on the target system:
+
+1- Modify the /etc/wpa_supplicant.conf and add the ssid, psk and the key_mgmt.
+
+Example of the /etc/wpa_supplicant.conf :
+-------------------------------------------
+ctrl_interface=/var/run/wpa_supplicant
+ctrl_interface_group=0
+update_config=1
+
+network={
+        key_mgmt=WPA-PSK
+        ssid="ssid"
+        psk="psk"
+}
+-------------------------------------------
+
+2- Now save the config file and restart the system.
+3- Your system should now connect directly to the specified wifi and assign an ip4 address after each boot.
